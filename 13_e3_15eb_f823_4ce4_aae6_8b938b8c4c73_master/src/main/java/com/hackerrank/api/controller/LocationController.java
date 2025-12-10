@@ -23,26 +23,24 @@ public class LocationController {
   //1. POST
   @RequestMapping(value = "/location", method = RequestMethod.POST)
   public ResponseEntity<Location> addRecord(@RequestBody Location newRecord) {
-    if (newRecord.getId() != null) {
-      return new ResponseEntity(newRecord, HttpStatus.OK);
+    if (newRecord.getId()!=null) {
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
-
-    if (newRecord.getId().toString() != null) {
-      return new ResponseEntity(newRecord, HttpStatus.BAD_REQUEST);
-    }
-
     Location createRecord = locationRepository.save(newRecord);
-    return new ResponseEntity(createRecord, HttpStatus.CREATED);
+    return new ResponseEntity<>(createRecord, HttpStatus.CREATED);
   }
 
   //2. GET by Id
   @RequestMapping(value = "/location/{id}", method = RequestMethod.GET)
   public ResponseEntity<Location> getRecordsById(@PathVariable Integer id) {
+    if(id <= 0 || id > locationRepository.count()) {
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
     Optional<Location> data = locationRepository.findById(id);
     if (data.isPresent()) {
       return new ResponseEntity(data, HttpStatus.OK);
     } else {
-      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
   }
 
