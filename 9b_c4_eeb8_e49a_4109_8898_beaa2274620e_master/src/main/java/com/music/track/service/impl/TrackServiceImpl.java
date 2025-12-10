@@ -7,6 +7,7 @@ import com.music.track.service.TrackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -20,22 +21,30 @@ public class TrackServiceImpl implements TrackService {
 
     @Override
     public Track createTrack(TrackRequest trackRequest) {
-        return null;
+        Track track = new Track();
+        track.setTitle(trackRequest.title());
+        track.setAlbumName(trackRequest.albumName());
+        track.setReleaseDate(trackRequest.releaseDate());
+        track.setPlayCount(trackRequest.playCount());
+        return trackRepository.save(track);
     }
 
     @Override
     public List<Track> getAllTracks() {
-        return null;
+        return trackRepository.findAll();
     }
 
     @Override
     public void deleteTrack(Long trackId) {
-
+        Optional<Track> isExistingTrack = trackRepository.findById(trackId);
+        if(isExistingTrack.isPresent()){
+            trackRepository.deleteById(trackId);
+        }
     }
 
     @Override
     public Track getTracksByTitle(String title)  {
-        return null;
+        return trackRepository.findByTitle(title);
     }
 
 }

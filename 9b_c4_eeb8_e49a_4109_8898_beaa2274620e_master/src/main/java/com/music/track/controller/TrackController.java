@@ -26,7 +26,8 @@ public class TrackController {
      */
     @PostMapping()
     public ResponseEntity<Track> createTrack(@RequestBody TrackRequest trackRequest){
-        return null;
+        Track track = trackService.createTrack(trackRequest);
+        return new ResponseEntity<>(track, HttpStatus.CREATED);
     }
     /**
      * Get all tracks
@@ -34,7 +35,7 @@ public class TrackController {
      */
     @GetMapping()
     public ResponseEntity<List<Track>> getAllTracks(){
-        return null;
+        return new ResponseEntity<>(trackService.getAllTracks(), HttpStatus.OK);
     }
 
     /**
@@ -44,7 +45,12 @@ public class TrackController {
      */
     @DeleteMapping("/{trackId}")
     public ResponseEntity<Void> deleteTrack(@PathVariable Long trackId){
-        return null;
+        if(trackId==null || trackId <0){
+
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        trackService.deleteTrack(trackId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     /**
@@ -54,7 +60,10 @@ public class TrackController {
      */
     @GetMapping("/search")
     public ResponseEntity<Track> getTrackByTitle(@RequestParam String title) throws ParseException {
-        return null;
+       if(title==null || title.isEmpty()){
+           return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+       }
+       return new ResponseEntity<>(trackService.getTracksByTitle(title), HttpStatus.OK);
     }
 
 }
