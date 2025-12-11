@@ -6,6 +6,7 @@ import com.artist.repository.ArtistRepository;
 import com.artist.service.ArtistService;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ArtistServiceImpl implements ArtistService {
@@ -17,20 +18,25 @@ public class ArtistServiceImpl implements ArtistService {
 
     @Override
     public Artist createArtist(ArtistRequest artistRequest) {
-        return null;
+        Artist artist = new Artist();
+        artist.setFirstName(artistRequest.firstName());
+        artist.setFirstName(artistRequest.lastName());
+        return artistRepository.save(artist);
     }
 
     @Override
     public List<Artist> getArtists() {
-        return null;
+        return artistRepository.findAll();
     }
 
     @Override
     public Artist getArtistByID(Long id) {
-        return null;
+         Optional<Artist> byId = artistRepository.findById(id);
+        return byId.orElse(null);
     }
 
     @Override
     public void deleteArtist(Long id) {
+        if(artistRepository.findById(id).isPresent()) artistRepository.deleteById(id);
     }
 }
