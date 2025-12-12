@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DefaultVehicleService implements VehicleService {
@@ -27,10 +28,9 @@ public class DefaultVehicleService implements VehicleService {
 
   @Override
   public Vehicle createNewVehicle(Vehicle vehicle) {
-    if (vehicle.getId().toString().isEmpty()) {
+    if (vehicle.getId() != null) {
       throw new BadRequestException("The ID must not be provided when creating a new Vehicle");
     }
-
     return vehicleRepository.save(vehicle);
   }
 
@@ -40,4 +40,5 @@ public class DefaultVehicleService implements VehicleService {
             .findById(id)
             .orElseThrow(() -> new ElementNotFoundException("Vehicle with ID not found"));
   }
+
 }

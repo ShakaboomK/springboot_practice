@@ -9,10 +9,10 @@ import lombok.*;
 
 import java.io.Serializable;
 
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
 @Builder
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)

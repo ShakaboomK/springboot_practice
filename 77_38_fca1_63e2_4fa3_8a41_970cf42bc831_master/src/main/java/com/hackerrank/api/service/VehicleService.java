@@ -10,4 +10,6 @@ public interface VehicleService {
   Vehicle createNewVehicle(Vehicle vehicle);
 
   Vehicle getVehicleById(Long id);
+
+
 }

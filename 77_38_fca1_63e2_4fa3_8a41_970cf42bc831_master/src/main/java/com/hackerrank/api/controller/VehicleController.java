@@ -1,8 +1,9 @@
 package com.hackerrank.api.controller;
 
+import com.hackerrank.api.exception.BadRequestException;
+import com.hackerrank.api.exception.ElementNotFoundException;
 import com.hackerrank.api.model.Vehicle;
 import com.hackerrank.api.service.VehicleService;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,24 +21,32 @@ public class VehicleController {
     this.vehicleService = vehicleService;
   }
 
-  @GetMapping(value = "/vehicle")
-  @ResponseStatus(HttpStatus.OK)
-  public List<Vehicle> getAllVehicle() {
-    return vehicleService.getAllVehicle();
+  @GetMapping("/vehicle")
+  public ResponseEntity<List<Vehicle>> getAllVehicles(){
+      return new ResponseEntity<>(vehicleService.getAllVehicle(), HttpStatus.OK);
   }
 
   @PostMapping(value = "/vehicle")
-  @ResponseStatus(HttpStatus.CREATED)
-  public Vehicle createVehicle(@Valid @RequestBody Vehicle vehicle) {
-    return vehicleService.createNewVehicle(vehicle);
+  public ResponseEntity<Vehicle> createVehicle( @RequestBody Vehicle vehicle) {
+
+      try{
+          Vehicle newVehicle = vehicleService.createNewVehicle(vehicle);
+          return new ResponseEntity<>(newVehicle, HttpStatus.CREATED);
+      }catch (BadRequestException e){
+          return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+      }
   }
 
   @GetMapping(value = "/vehicle/{id}")
   public ResponseEntity<Vehicle> getVehicleById(@PathVariable Long id) {
-    if (id != 0) {
-      //non existing
-      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
-    return new ResponseEntity<>(vehicleService.getVehicleById(id), HttpStatus.OK);
+      if(id<=0 ) {
+          return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+      }
+      try{
+          Vehicle vehicleById = vehicleService.getVehicleById(id);
+          return new ResponseEntity<>(vehicleById, HttpStatus.OK);
+      }catch (ElementNotFoundException e){
+          return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      }
   }
 }
