@@ -7,6 +7,7 @@ import com.hackerrank.tradingplatform.model.Trader;
 import com.hackerrank.tradingplatform.service.TraderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -23,38 +24,37 @@ public class TraderController {
     //register
     @RequestMapping(value = "/register", method = RequestMethod.POST, consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public void registerTrader(@RequestBody @Valid Trader trader) {
-        traderService.registerTrader(trader);
+    public ResponseEntity<Void> registerTrader(@RequestBody Trader trader) {
+        return traderService.registerTrader(trader);
     }
 
     //get by email
     @RequestMapping(method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public TraderDTO getTraderByEmail(@RequestParam("email") String email) {
-        return new TraderDTO(traderService.getTraderByEmail(email));
+    public ResponseEntity<TraderDTO> getTraderByEmail(@RequestParam("email") String email) {
+        Trader traderByEmail = traderService.getTraderByEmail(email);
+        if(traderByEmail == null)return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new TraderDTO(traderByEmail), HttpStatus.OK);
     }
 
     //get all
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public List<TraderDTO> getAllTraders() {
-        return traderService.getAllTraders()
-                .stream()
-                .map(TraderDTO::new)
-                .collect(toList());
+    public List<Trader> getAllTraders() {
+        return traderService.getAllTraders();
     }
 
     //update by email
     @RequestMapping(method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
-    public void updateTrader(@RequestBody @Valid UpdateTraderDTO trader) {
-        traderService.updateTrader(trader);
+    public ResponseEntity<Void> updateTrader(@RequestBody @Valid UpdateTraderDTO trader) {
+       return traderService.updateTrader(trader);
     }
 
     //add money
     @RequestMapping(value = "/add", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
-    public void addMoney(@RequestBody @Valid AddMoneyTraderDTO trader) {
-        traderService.addMoney(trader);
+    public ResponseEntity<Void> addMoney(@RequestBody @Valid AddMoneyTraderDTO trader) {
+       return traderService.addMoney(trader);
     }
 }

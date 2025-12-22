@@ -80,7 +80,6 @@ public class TradingPlatformTests {
                     .andExpect(status().isBadRequest());
         }
     }
-
     @Test
     public void testUpdateTrader() throws Exception {
         //test update by email
