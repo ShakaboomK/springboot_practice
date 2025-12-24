@@ -7,6 +7,8 @@ import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.regex.Pattern;
 
 public class EmployeeValidator implements Validator {
@@ -34,6 +36,9 @@ public class EmployeeValidator implements Validator {
                 "fullName.mandatory",
                 "The fullName is a mandatory field"
         );
+//        if(employee.getFullName()==null || employee.getFullName().trim().isEmpty()){
+//            errors.rejectValue("fullName","","The fullName is a mandatory field");
+//        }
 
         // --- 2. mobileNumber ---
         Long mobileNumberLong = employee.getMobileNumber();
@@ -83,5 +88,17 @@ public class EmployeeValidator implements Validator {
                 errors.rejectValue("dateOfBirth", "dateOfBirth.format", "The dateOfBirth should be in YYYY-MM-DD format");
             }
         }
+
+//        if(employee.getDateOfBirth()==null ||employee.getDateOfBirth().trim().isEmpty()){
+//            errors.rejectValue("dateOfBirth", "","The dateOfBirth is a mandatory field");
+//        }else {
+//            try{
+//                DateTimeFormatter fmt = DateTimeFormatter.ofPattern(DATE_FORMAT);
+//                LocalDate.parse(employee.getDateOfBirth(),fmt);
+//            }catch (Exception e){
+//                errors.rejectValue("dateOfBirth","","The dateOfBirth should be in YYYY-MM-DD format");
+//            }
+//        }
+
     }
 }
