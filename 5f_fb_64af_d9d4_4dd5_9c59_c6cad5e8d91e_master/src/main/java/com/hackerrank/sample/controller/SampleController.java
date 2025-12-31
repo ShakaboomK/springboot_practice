@@ -2,6 +2,8 @@ package com.hackerrank.sample.controller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -37,8 +39,17 @@ public class SampleController {
 			try {
 				
 			
-					ArrayList<FilteredProducts> books = new ArrayList<FilteredProducts>();
-			
+					ArrayList<FilteredProducts> books = new ArrayList<>();
+                    for(int i = 0; i< data.length(); i++){
+                        JSONObject product = data.getJSONObject(i);
+                        int price = product.getInt("price");
+
+                        if(price>=init_price &&  price<=final_price){
+                            books.add(new FilteredProducts(product.getString("barcode")));
+                        }
+
+                    }
+                    if(books.isEmpty())return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 				    return new ResponseEntity<ArrayList<FilteredProducts>>(books, HttpStatus.OK);
 
 			   
@@ -55,13 +66,24 @@ public class SampleController {
 		@CrossOrigin
 		@GetMapping("/sort/price")  
 		private ResponseEntity<SortedProducts[]> sorted_books()   
-		{  
-			
-			try {
-				
-		         SortedProducts[] ans=new SortedProducts[data.length()];
+		{
+            List<JSONObject> products = new ArrayList<>();
+            for (int i = 0; i<data.length(); i++){
+                products.add(data.getJSONObject(i));
+            }
+            products.sort((a,b)-> Integer.compare(a.getInt("price"),b.getInt("price")));
+            List<SortedProducts> sortedProductsList = new ArrayList<>();
 
-			
+			try {
+
+                SortedProducts[] ans=new SortedProducts[data.length()];
+
+                 for(int i = 0; i< ans.length; i++){
+//                     ans[i] = sortedProductsList.get(i);
+                     ans[i] = new SortedProducts(products.get(i).getString("barcode"));
+                 }
+
+
 		         
 	
 			    return new ResponseEntity<SortedProducts[]>(ans, HttpStatus.OK);

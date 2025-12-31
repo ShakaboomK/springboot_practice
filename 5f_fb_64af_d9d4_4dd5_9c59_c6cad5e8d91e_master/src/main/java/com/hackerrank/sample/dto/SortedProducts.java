@@ -6,6 +6,7 @@ public class SortedProducts {
 	
 
 
+	private String BarCode;
 
 	public String getBarCode() {
 		return BarCode;
@@ -15,8 +16,7 @@ public class SortedProducts {
 		BarCode = barCode;
 	}
 
-	private String BarCode;
-	
+
 	public SortedProducts(String a) {
 		BarCode=a;
 	}
